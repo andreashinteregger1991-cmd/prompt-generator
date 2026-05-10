@@ -815,12 +815,12 @@ function renderPrompt() {
     if (fd.topic) lines.push(`Schreibe ${articleFor(fmt)} ${fmt} über folgendes Thema:\n„${fd.topic}"`);
     else          lines.push(`Schreibe ${articleFor(fmt)} ${fmt}.`);
 
-    if (fd.audience)      lines.push(`\nDie Inhalte sollen auf ${fd.audience} zugeschnitten sein.`);
-    if (fd.tone)          lines.push(toneText(fd.tone));
-    if (fd.perspective)   lines.push(perspectiveText(fd.perspective));
-    if (fd.length)        lines.push(lengthText(fd.length));
-    if (fd.goal)          lines.push(`\nZiel ist es, ${fd.goal}.`);
+    if (fd.audience)       lines.push(`\nDie Inhalte sollen auf ${fd.audience} zugeschnitten sein.`);
+    if (fd.goal)           lines.push(`Ziel ist es, ${fd.goal}.`);
     if (fd.contentQuality) lines.push(contentQualityNatural(fd.contentQuality));
+    if (fd.tone)           lines.push(`\n`+toneText(fd.tone));
+    if (fd.perspective)    lines.push(perspectiveText(fd.perspective));
+    if (fd.length)         lines.push(lengthText(fd.length));
     if (fd.platform)      lines.push(`Berücksichtige: ${fd.platform}`);
     if (fd.avoid)         lines.push(`\nVermeide ${fd.avoid}.`);
     if (fd.example)       lines.push(`\nOrientiere dich stilistisch an folgendem Beispiel:\n${fd.example}`);
@@ -936,9 +936,9 @@ function renderPrompt() {
 function getIterationPrompts() {
   const common = [
     'Vermeide Floskeln und generische KI-Sprache.',
+    'Einfachere Sprache – so als würdest du es einem Freund erklären.',
     'Kürzer und prägnanter – halbiere die Länge.',
     'Weniger allgemein, mehr konkret und spezifisch.',
-    'Einfachere Sprache – so als würdest du es einem Freund erklären.',
   ];
   const byArea = {
     content: [
