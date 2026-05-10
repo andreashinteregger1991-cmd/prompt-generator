@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Generator</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f0f2f5;
+  min-height: 100vh;
+  color: #1a1a2a;
+}
+
+header {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 12px rgba(79,70,229,0.3);
+}
+
+header .logo { font-size: 1.6rem; }
+header h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; }
+header p { font-size: 0.82rem; opacity: 0.75; margin-top: 2px; }
+
+.container {
+  max-width: 720px;
+  margin: 36px auto;
+  padding: 0 20px;
+}
+
+.steps {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.83rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.step-item.active { color: #4f46e5; }
+.step-item.done { color: #059669; }
+
+.step-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-item.active .step-num { background: #4f46e5; color: white; }
+.step-item.done .step-num { background: #059669; color: white; }
+
+.step-line { flex: 1; height: 2px; background: #e5e7eb; max-width: 80px; margin: 0 8px; }
+.step-item.done + .step-line { background: #059669; }
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.07), 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.card h2 { font-size: 1.15rem; font-weight: 700; color: #111827; margin-bottom: 6px; }
+.subtitle { color: #6b7280; font-size: 0.875rem; margin-bottom: 24px; line-height: 1.5; }
+
+/* Area grid */
+.area-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.area-card {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 22px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  background: white;
+}
+
+.area-card:hover {
+  border-color: #a5b4fc;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79,70,229,0.1);
+}
+
+.area-card.selected {
+  border-color: #4f46e5;
+  background: #eef2ff;
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+}
+
+.area-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+.area-title { font-weight: 700; font-size: 0.92rem; color: #111827; }
+.area-desc { font-size: 0.76rem; color: #9ca3af; margin-top: 5px; line-height: 1.4; }
+
+/* Form fields */
+.field-group { margin-bottom: 22px; }
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.optional { font-weight: 400; color: #9ca3af; font-size: 0.78rem; margin-left: 5px; }
+
+input[type="text"], textarea, select {
+  width: 100%;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  padding: 9px 13px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: #111827;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+  background: #fafafa;
+  line-height: 1.5;
+}
+
+input[type="text"]:focus, textarea:focus, select:focus {
+  border-color: #4f46e5;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
+}
+
+textarea { resize: vertical; min-height: 80px; }
+
+select { cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239CA3AF' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* Chips */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.chip {
+  padding: 6px 14px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 100px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  background: white;
+  transition: all 0.13s;
+  font-family: inherit;
+  color: #4b5563;
+  line-height: 1;
+}
+
+.chip:hover { border-color: #818cf8; color: #4f46e5; }
+.chip.selected { background: #4f46e5; border-color: #4f46e5; color: white; font-weight: 600; }
+
+/* Toggle */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.toggle-label { font-size: 0.875rem; color: #374151; }
+.toggle-hint { font-size: 0.76rem; color: #9ca3af; margin-top: 2px; }
+
+.toggle-switch {
+  width: 42px; height: 22px;
+  background: #d1d5db;
+  border-radius: 100px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  border: none; outline: none;
+  flex-shrink: 0;
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  background: white;
+  border-radius: 50%;
+  top: 3px; left: 3px;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+
+.toggle-switch.on { background: #4f46e5; }
+.toggle-switch.on::after { transform: translateX(20px); }
+
+/* Divider */
+.section-divider {
+  border: none;
+  border-top: 1px solid #f3f4f6;
+  margin: 24px 0 20px;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+  margin-bottom: 16px;
+}
+
+/* Navigation buttons */
+.nav-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #f3f4f6;
+  gap: 12px;
+}
+
+.btn-back {
+  padding: 9px 18px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #6b7280;
+  font-size: 0.875rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.13s;
+}
+
+.btn-back:hover { border-color: #9ca3af; color: #374151; }
+
+.btn-next {
+  padding: 10px 22px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.13s, transform 0.1s;
+  margin-left: auto;
+}
+
+.btn-next:hover { background: #4338ca; transform: translateY(-1px); }
+.btn-next:disabled { background: #d1d5db; color: #9ca3af; cursor: not-allowed; transform: none; }
+
+/* Prompt preview */
+.prompt-box {
+  background: #1e1e2e;
+  border-radius: 10px;
+  padding: 20px;
+  color: #cdd6f4;
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 140px;
+  position: relative;
+}
+
+.prompt-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.char-count {
+  margin-left: auto;
+  font-weight: 400;
+  color: #9ca3af;
+  font-size: 0.76rem;
+}
+
+.action-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.btn-copy {
+  padding: 10px 20px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.btn-copy:hover { background: #4338ca; }
+.btn-copy.copied { background: #059669; }
+
+.tip-box {
+  background: #eff6ff;
+  border-left: 3px solid #3b82f6;
+  border-radius: 0 8px 8px 0;
+  padding: 11px 15px;
+  font-size: 0.82rem;
+  color: #1d4ed8;
+  margin-top: 16px;
+  line-height: 1.5;
+}
+
+/* Info badge */
+.info-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.76rem;
+  padding: 4px 10px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+@media (max-width: 580px) {
+  .area-grid { grid-template-columns: 1fr 1fr; }
+  .area-grid .area-card:last-child { grid-column: span 2; }
+  header { padding: 14px 20px; }
+  .container { margin: 20px auto; }
+  .card { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo">⚡</span>
+  <div>
+    <h1>Prompt Generator</h1>
+    <p>Strukturierte Prompts für jede KI — Schritt für Schritt</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="steps" id="stepBar">
+    <div class="step-item active" id="si1"><div class="step-num">1</div><span>Bereich</span></div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step-item" id="si2"><div class="step-num">2</div><span>Details</span></div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step-item" id="si3"><div class="step-num">3</div><span>Prompt</span></div>
+  </div>
+
+  <!-- STEP 1: Area selection -->
+  <div id="step1" class="card">
+    <h2>Was möchtest du erstellen?</h2>
+    <p class="subtitle">Wähle einen Bereich – die Fragen passen sich dann automatisch an.</p>
+
+    <div class="area-grid">
+      <div class="area-card" data-area="content" tabindex="0">
+        <span class="area-icon">✍️</span>
+        <div class="area-title">Content & Texte</div>
+        <div class="area-desc">LinkedIn, Blog, E-Mail, Newsletter, Zusammenfassungen</div>
+      </div>
+      <div class="area-card" data-area="task" tabindex="0">
+        <span class="area-icon">🎯</span>
+        <div class="area-title">Aufgabe delegieren</div>
+        <div class="area-desc">Analyse, Recherche, Strukturieren, Entscheidungen vorbereiten</div>
+      </div>
+      <div class="area-card" data-area="image" tabindex="0">
+        <span class="area-icon">🎨</span>
+        <div class="area-title">Bildgenerierung</div>
+        <div class="area-desc">Midjourney, DALL-E, Stable Diffusion</div>
+      </div>
+    </div>
+
+    <div class="nav-btns">
+      <div></div>
+      <button class="btn-next" id="btn1next" disabled>Weiter →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Dynamic form -->
+  <div id="step2" class="card" style="display:none">
+    <h2 id="s2title"></h2>
+    <p class="subtitle" id="s2sub"></p>
+    <div id="s2form"></div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goTo(1)">← Zurück</button>
+      <button class="btn-next" onclick="goTo(3)">Prompt generieren →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Result -->
+  <div id="step3" class="card" style="display:none">
+    <h2>Dein Prompt ist fertig ✓</h2>
+    <p class="subtitle">Kopiere den Prompt und füge ihn in die KI deiner Wahl ein.</p>
+
+    <div class="prompt-label">
+      <span>Generierter Prompt</span>
+      <span class="char-count" id="charCount"></span>
+    </div>
+    <div class="prompt-box" id="promptOut"></div>
+
+    <div class="action-row">
+      <button class="btn-copy" id="copyBtn" onclick="copyPrompt()">📋 Prompt kopieren</button>
+    </div>
+
+    <div class="tip-box" id="tipOut"></div>
+
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goTo(2)">← Anpassen</button>
+      <button class="btn-next" onclick="restart()">🔄 Neu starten</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── State ───────────────────────────────────────────────────
+let area = null;
+const fd = {}; // form data
+
+// ─── Navigation ──────────────────────────────────────────────
+function goTo(step) {
+  [1,2,3].forEach(n => {
+    document.getElementById('step'+n).style.display = n===step ? 'block' : 'none';
+  });
+  // Step bar
+  [1,2,3].forEach(n => {
+    const el = document.getElementById('si'+n);
+    el.className = 'step-item' + (n<step?' done':n===step?' active':'');
+  });
+  if (step===2) renderForm();
+  if (step===3) { collectData(); renderPrompt(); }
+}
+
+function restart() {
+  area = null;
+  Object.keys(fd).forEach(k => delete fd[k]);
+  document.querySelectorAll('.area-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('btn1next').disabled = true;
+  goTo(1);
+}
+
+// ─── Area selection ───────────────────────────────────────────
+document.querySelectorAll('.area-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.area-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    area = card.dataset.area;
+    document.getElementById('btn1next').disabled = false;
+  });
+  card.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') card.click(); });
+});
+
+document.getElementById('btn1next').addEventListener('click', () => { if(area) goTo(2); });
+
+// ─── Chip selection (event delegation) ───────────────────────
+document.addEventListener('click', e => {
+  if (!e.target.classList.contains('chip')) return;
+  const chip = e.target;
+  const group = chip.closest('.chips');
+  if (!group) return;
+  const field = group.dataset.field;
+  const val = chip.dataset.val;
+  group.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  fd[field] = val;
+  // Show/hide conditional fields
+  const cond = group.dataset.cond;
+  const condVal = group.dataset.condVal;
+  if (cond) {
+    const target = document.getElementById('cond-'+cond);
+    if (target) target.style.display = val===condVal ? 'block' : 'none';
+  }
+});
+
+// Toggle switches
+document.addEventListener('click', e => {
+  if (!e.target.classList.contains('toggle-switch')) return;
+  const btn = e.target;
+  btn.classList.toggle('on');
+  fd[btn.dataset.field] = btn.classList.contains('on');
+});
+
+// Text inputs sync
+document.addEventListener('input', e => {
+  const field = e.target.dataset.field;
+  if (field) fd[field] = e.target.value;
+});
+
+// ─── Form builder helpers ─────────────────────────────────────
+function chips(field, options, condField, condVal) {
+  const condAttrs = condField ? ` data-cond="${condField}" data-cond-val="${condVal}"` : '';
+  return `<div class="chips" data-field="${field}"${condAttrs}>${
+    options.map(o => `<button class="chip${fd[field]===o?' selected':''}" data-val="${o}">${o}</button>`).join('')
+  }</div>`;
+}
+
+function textInput(field, placeholder) {
+  return `<input type="text" data-field="${field}" placeholder="${placeholder}" value="${fd[field]||''}">`;
+}
+
+function textArea(field, placeholder, rows=3) {
+  return `<textarea data-field="${field}" placeholder="${placeholder}" style="min-height:${rows*28}px">${fd[field]||''}</textarea>`;
+}
+
+function toggle(field, label, hint='') {
+  return `<div class="toggle-row">
+    <div><div class="toggle-label">${label}</div>${hint?`<div class="toggle-hint">${hint}</div>`:''}</div>
+    <button class="toggle-switch${fd[field]?' on':''}" data-field="${field}" title="${label}"></button>
+  </div>`;
+}
+
+// ─── FORM RENDERING ───────────────────────────────────────────
+function renderForm() {
+  const form = document.getElementById('s2form');
+  if (area==='content') {
+    document.getElementById('s2title').textContent = '✍️  Content & Texte';
+    document.getElementById('s2sub').textContent = 'Beantworte die Fragen so konkret wie möglich – je mehr Details, desto besser der Output.';
+    form.innerHTML = `
+      <div class="field-group">
+        <label>Format</label>
+        ${chips('format', ['LinkedIn Post','Blog-Artikel','E-Mail','Newsletter','Zusammenfassung','Social Media Caption','Sonstiges'], 'formatCustom','Sonstiges')}
+      </div>
+      <div class="field-group" id="cond-formatCustom" style="display:${fd.format==='Sonstiges'?'block':'none'}">
+        <label>Format (eigene Eingabe)</label>
+        ${textInput('formatCustom','z.B. Pressemitteilung, Produktbeschreibung...')}
+      </div>
+
+      <div class="field-group">
+        <label>Thema / Inhalt</label>
+        ${textArea('topic','Worum geht es? Was soll der Text behandeln?')}
+      </div>
+
+      <div class="field-group">
+        <label>Zielgruppe</label>
+        ${textInput('audience','z.B. CFOs in KMUs, SAP-Projektleiter, HR-Verantwortliche...')}
+      </div>
+
+      <div class="field-group">
+        <label>Ton</label>
+        ${chips('tone', ['Professionell','Locker & persönlich','Direkt','Inspirierend','Sachlich-nüchtern','Humorvoll'])}
+      </div>
+
+      <div class="field-group">
+        <label>Perspektive <span class="optional">optional</span></label>
+        ${chips('perspective', ['Ich-Perspektive','Wir-Perspektive','3. Person','Du-Ansprache (direkt)'])}
+      </div>
+
+      <div class="field-group">
+        <label>Länge</label>
+        ${chips('length', ['Sehr kurz (~80W)','Kurz (~150W)','Mittel (~300W)','Lang (~600W)','Sehr lang (~1000W+)'])}
+      </div>
+
+      <div class="field-group">
+        <label>Ziel / Was soll der Leser danach tun?</label>
+        ${textInput('goal','z.B. Interesse wecken, Kontakt aufnehmen, etwas lernen, Vertrauen aufbauen...')}
+      </div>
+
+      <hr class="section-divider">
+      <div class="section-label">Qualität verfeinern (optional)</div>
+
+      <div class="field-group">
+        <label>Was soll der Text NICHT enthalten? <span class="optional">optional</span></label>
+        ${textInput('avoid','z.B. kein Fachjargon, keine Floskeln, kein Clickbait, keine englischen Begriffe...')}
+      </div>
+
+      <div class="field-group">
+        <label>Plattform-Hinweise <span class="optional">optional</span></label>
+        ${textInput('platform','z.B. LinkedIn: Zeilenumbrüche nutzen, max. 3 Hashtags – oder: E-Mail max. 150 Wörter')}
+      </div>
+
+      <div class="field-group">
+        <label>Stil-Referenz oder Beispiel-Text <span class="optional">optional – sehr empfohlen</span></label>
+        ${textArea('example','Füge einen Text ein den du magst, oder beschreibe den Stil ("schreibe wie Simon Sinek", "direkt und ohne Füllwörter")...',2)}
+      </div>
+
+      ${toggle('variants','Varianten vorschlagen','KI soll 2–3 verschiedene Versionen erstellen')}
+
+      <div class="field-group">
+        <label>Bei Unklarheiten soll die KI... <span class="optional">optional</span></label>
+        ${chips('onUnclear', ['Nachfragen bevor sie anfängt','Eigene Annahmen treffen und transparent nennen','Beide Möglichkeiten zeigen'])}
+      </div>
+    `;
+  }
+
+  else if (area==='task') {
+    document.getElementById('s2title').textContent = '🎯  Aufgabe delegieren';
+    document.getElementById('s2sub').textContent = 'Je präziser du die Aufgabe beschreibst, desto besser der Output. Kontext ist entscheidend.';
+    form.innerHTML = `
+      <div class="field-group">
+        <label>Was soll die KI tun?</label>
+        ${textArea('task','Beschreibe die Aufgabe konkret. Statt "analysiere das" besser: "Identifiziere die 3 größten Risiken in diesem Text und begründe sie."',4)}
+      </div>
+
+      <div class="field-group">
+        <label>Rolle der KI <span class="optional">optional – stark empfohlen</span></label>
+        ${textInput('role','z.B. erfahrener SAP FI/CO-Berater, Projektmanager mit Lean-Hintergrund, Senior Marketing Strategist...')}
+      </div>
+
+      <div class="field-group">
+        <label>Kontext & Hintergrund</label>
+        ${textArea('context','Was muss die KI über deine Situation wissen? Ohne Kontext kommen nur allgemeine Antworten.',3)}
+      </div>
+
+      <div class="field-group">
+        <label>Gewünschtes Output-Format</label>
+        ${chips('outputFormat', ['Fließtext','Aufzählung','Nummerierte Liste','Tabelle','Schritt-für-Schritt','Pro/Contra','Zusammenfassung + Details'])}
+      </div>
+
+      <hr class="section-divider">
+      <div class="section-label">Qualität & Verhalten</div>
+
+      ${toggle('cot','Schrittweise denken (Chain of Thought)','KI denkt zuerst durch, dann antwortet sie – besser bei komplexen Aufgaben')}
+      ${toggle('variants','Mehrere Varianten vorschlagen','KI soll 2–3 Alternativen anbieten')}
+
+      <div class="field-group" style="margin-top:16px">
+        <label>Qualitätskriterien <span class="optional">optional</span></label>
+        ${textInput('quality','Was macht einen guten Output aus? z.B. "konkret und umsetzbar, max. 5 Punkte, auf Deutsch"')}
+      </div>
+
+      <div class="field-group">
+        <label>Was soll die KI NICHT tun? <span class="optional">optional</span></label>
+        ${textInput('constraints','z.B. keine allgemeinen Ratschläge, kein Fachjargon, nicht mehr als 500 Wörter...')}
+      </div>
+
+      <div class="field-group">
+        <label>Bei Unklarheiten soll die KI...</label>
+        ${chips('onUnclear', ['Nachfragen bevor sie anfängt','Eigene Annahmen treffen und transparent nennen','Beide Möglichkeiten zeigen'])}
+      </div>
+
+      <div class="field-group">
+        <label>Beispiel für einen guten Output <span class="optional">optional – stärkstes Qualitäts-Tool</span></label>
+        ${textArea('taskExample','Zeige der KI wie das Ergebnis aussehen soll. Das verbessert den Output stärker als jede andere Anweisung.',2)}
+      </div>
+    `;
+  }
+
+  else if (area==='image') {
+    document.getElementById('s2title').textContent = '🎨  Bildgenerierung';
+    document.getElementById('s2sub').textContent = 'Beschreibe das Bild von Motiv bis Stimmung. Die Reihenfolge beeinflusst das Ergebnis.';
+    form.innerHTML = `
+      <div class="field-group">
+        <label>Ziel-KI <span class="optional">beeinflusst das Prompt-Format</span></label>
+        ${chips('imageAI', ['Midjourney','DALL-E','Stable Diffusion','Allgemein'])}
+      </div>
+
+      <div class="field-group">
+        <label>Motiv – Was soll zu sehen sein?</label>
+        ${textArea('subject','Beschreibe das Hauptmotiv detailliert: Wer/Was, wie, wo? z.B. "Eine Frau sitzt am Fenster eines Cafés, liest ein Buch, draußen regnet es"',3)}
+      </div>
+
+      <div class="field-group">
+        <label>Stil</label>
+        ${chips('style', ['Fotorealistisch','Digitale Illustration','Ölgemälde','3D Render','Anime / Manga','Aquarell','Concept Art','Minimalistisch','Vintage / Retro'])}
+      </div>
+
+      <div class="field-group">
+        <label>Komposition & Perspektive</label>
+        ${chips('composition', ['Nahaufnahme / Close-up','Portrait','Halbkörper','Weitwinkel / Totale','Vogelperspektive','Froschperspektive','Symmetrisch'])}
+      </div>
+
+      <div class="field-group">
+        <label>Beleuchtung <span class="optional">größter Einfluss auf Stimmung und Qualität</span></label>
+        ${chips('lighting', ['Natürliches Tageslicht','Golden Hour','Blaue Stunde / Blue Hour','Studiobeleuchung','Dramatisch / Chiaroscuro','Neonlicht','Kerzenlicht / Fackelschein','Gegenlicht / Backlit'])}
+      </div>
+
+      <div class="field-group">
+        <label>Atmosphäre / Stimmung</label>
+        ${chips('mood', ['Ruhig & friedlich','Energiegeladen','Mystisch & geheimnisvoll','Warm & einladend','Dunkel & dramatisch','Verspielt & fröhlich','Melancholisch','Episch & grandios'])}
+      </div>
+
+      <div class="field-group">
+        <label>Farbpalette <span class="optional">optional</span></label>
+        ${chips('colorPalette', ['Warme Töne','Kühle Töne','Pastellfarben','Schwarz & Weiß','Erdtöne','Neonfarben','Monochrom'])}
+      </div>
+
+      <hr class="section-divider">
+      <div class="section-label">Details & Technisches</div>
+
+      <div class="field-group">
+        <label>Seitenverhältnis <span class="optional">optional</span></label>
+        ${chips('ratio', ['1:1 Quadrat','16:9 Querformat','9:16 Hochformat','4:3','3:2 Foto'])}
+      </div>
+
+      <div class="field-group">
+        <label>Künstlerische Referenz <span class="optional">optional – sehr effektiv</span></label>
+        ${textInput('artRef','z.B. "im Stil von Monet", "wie ein National Geographic Foto", "Pixar-Style", "shot on Canon EOS 5D"')}
+      </div>
+
+      <div class="field-group">
+        <label>Negative Prompts – Was soll NICHT im Bild sein? <span class="optional">optional – sehr wichtig</span></label>
+        ${textInput('negative','z.B. kein Text, keine Wasserzeichen, keine schlechte Qualität, keine verzerrten Hände, kein Blur...')}
+      </div>
+
+      <hr class="section-divider">
+      <div class="section-label">Midjourney Parameter (nur für Midjourney)</div>
+
+      <div class="field-group">
+        <label>Stylize <span class="optional">0–1000, Standard: 100</span></label>
+        ${textInput('mjStylize','z.B. 50 = nah am Prompt, 750 = sehr künstlerisch interpretiert')}
+      </div>
+
+      <div class="field-group">
+        <label>Chaos <span class="optional">0–100, Standard: 0</span></label>
+        ${textInput('mjChaos','z.B. 0 = konsistent, 50 = mehr Variation, 100 = maximale Überraschung')}
+      </div>
+
+      <div class="field-group">
+        <label>Seed <span class="optional">optional – für reproduzierbare Ergebnisse</span></label>
+        ${textInput('mjSeed','Zahl aus einem vorherigen Ergebnis – erzeugt ähnliche Bilder bei gleichem Prompt')}
+      </div>
+    `;
+  }
+}
+
+// ─── Collect all text/textarea data ──────────────────────────
+function collectData() {
+  document.querySelectorAll('#s2form [data-field]').forEach(el => {
+    if (el.tagName==='INPUT'||el.tagName==='TEXTAREA'||el.tagName==='SELECT') {
+      fd[el.dataset.field] = el.value.trim();
+    }
+  });
+}
+
+// ─── PROMPT ASSEMBLY ─────────────────────────────────────────
+function renderPrompt() {
+  let prompt = '';
+  let tip = '';
+
+  if (area==='content') {
+    const fmt = fd.format==='Sonstiges' ? (fd.formatCustom||'Text') : (fd.format||'Text');
+    const lines = [];
+
+    if (fd.topic)    lines.push(`Schreibe ${articleFor(fmt)} ${fmt} über folgendes Thema:\n"${fd.topic}"`);
+    else             lines.push(`Schreibe ${articleFor(fmt)} ${fmt}.`);
+
+    const meta = [];
+    if (fd.audience)    meta.push(`Zielgruppe: ${fd.audience}`);
+    if (fd.tone)        meta.push(`Ton: ${fd.tone}`);
+    if (fd.perspective) meta.push(`Perspektive: ${fd.perspective}`);
+    if (fd.length)      meta.push(`Länge: ${fd.length}`);
+    if (meta.length)    lines.push('\n'+meta.join('\n'));
+
+    if (fd.goal)     lines.push(`\nZiel: ${fd.goal}`);
+    if (fd.platform) lines.push(`Plattform-Hinweise: ${fd.platform}`);
+    if (fd.avoid)     lines.push(`\nBitte vermeide: ${fd.avoid}`);
+    if (fd.example)   lines.push(`\nOrientiere dich an folgendem Stil:\n${fd.example}`);
+    if (fd.onUnclear) lines.push(`\nBei Unklarheiten: ${fd.onUnclear}.`);
+    if (fd.variants)  lines.push(`\nBitte erstelle 2–3 verschiedene Varianten.`);
+
+    prompt = lines.join('\n').trim();
+    tip = '💡 Tipp: Dieser Prompt funktioniert in Claude, ChatGPT und Gemini. Du kannst am Ende noch spezifische Inhalte oder Materialien anhängen.';
+  }
+
+  else if (area==='task') {
+    const lines = [];
+
+    if (fd.role)     lines.push(`Du bist ${fd.role}.\n`);
+    if (fd.task)     lines.push(`Aufgabe:\n${fd.task}`);
+    if (fd.context)  lines.push(`\nKontext:\n${fd.context}`);
+
+    if (fd.cot)      lines.push(`\nBitte denke die Aufgabe zuerst Schritt für Schritt durch, bevor du antwortest.`);
+
+    const out = [];
+    if (fd.outputFormat) out.push(`Format des Outputs: ${fd.outputFormat}`);
+    if (fd.quality)      out.push(`Kriterien: ${fd.quality}`);
+    if (out.length)      lines.push('\n'+out.join('\n'));
+
+    if (fd.constraints)  lines.push(`\nWichtig – bitte vermeide: ${fd.constraints}`);
+    if (fd.variants)     lines.push(`Bitte zeige 2–3 verschiedene Ansätze.`);
+    if (fd.onUnclear)    lines.push(`\nBei Unklarheiten: ${fd.onUnclear}.`);
+    if (fd.taskExample)  lines.push(`\nBeispiel für einen guten Output:\n${fd.taskExample}`);
+
+    prompt = lines.join('\n').trim();
+    tip = '💡 Tipp: Füge nach diesem Prompt das konkrete Material an (Text, Daten, Tabelle etc.) das die KI verarbeiten soll.';
+  }
+
+  else if (area==='image') {
+    const isMJ = fd.imageAI==='Midjourney';
+    const isSD = fd.imageAI==='Stable Diffusion';
+
+    if (isMJ) {
+      // Midjourney: keyword-first, order matters, earlier = more weight
+      const kw = [];
+      if (fd.subject)      kw.push(fd.subject);
+      if (fd.style)        kw.push(styleKW(fd.style));
+      if (fd.artRef)       kw.push(fd.artRef);
+      if (fd.composition)  kw.push(compositionKW(fd.composition));
+      if (fd.lighting)     kw.push(lightingKW(fd.lighting));
+      if (fd.mood)         kw.push(moodKW(fd.mood));
+      if (fd.colorPalette) kw.push(colorKW(fd.colorPalette));
+      kw.push('highly detailed', 'high quality');
+
+      prompt = kw.join(', ');
+      if (fd.negative) prompt += `\n\n--no ${fd.negative}`;
+      const r = ratioVal(fd.ratio);
+      if (r) prompt += `\n--ar ${r}`;
+      if (fd.mjStylize) prompt += `\n--stylize ${fd.mjStylize}`;
+      if (fd.mjChaos)   prompt += `\n--chaos ${fd.mjChaos}`;
+      if (fd.mjSeed)    prompt += `\n--seed ${fd.mjSeed}`;
+      prompt += '\n--v 7';
+
+      tip = '💡 Midjourney: Reihenfolge der Keywords zählt – wichtigstes steht vorne. Füge --style raw für realistischere Ergebnisse hinzu, oder --s 0 für weniger künstlerische Interpretation.';
+    }
+
+    else if (isSD) {
+      // Stable Diffusion: positive + negative prompt block
+      const pos = [];
+      if (fd.subject)      pos.push(fd.subject);
+      if (fd.style)        pos.push(styleKW(fd.style));
+      if (fd.artRef)       pos.push(fd.artRef);
+      if (fd.composition)  pos.push(compositionKW(fd.composition));
+      if (fd.lighting)     pos.push(lightingKW(fd.lighting));
+      if (fd.mood)         pos.push(moodKW(fd.mood));
+      if (fd.colorPalette) pos.push(colorKW(fd.colorPalette));
+      pos.push('masterpiece', 'best quality', 'highly detailed', '8k');
+
+      prompt = pos.join(', ');
+
+      const neg = ['lowres','bad anatomy','bad hands','text','watermark','blurry','worst quality'];
+      if (fd.negative) neg.unshift(...fd.negative.split(',').map(s=>s.trim()).filter(Boolean));
+      prompt += `\n\nNegative prompt: ${neg.join(', ')}`;
+
+      const r = ratioVal(fd.ratio);
+      if (r) {
+        const [w,h] = r.split(':');
+        const base = 512;
+        prompt += `\n\n(Aspect ratio: ${r} → z.B. ${base}x${Math.round(base*parseInt(h)/parseInt(w))}px)`;
+      }
+
+      tip = '💡 Stable Diffusion: Quality-Tags wie "masterpiece, best quality" haben großen Einfluss. Der Negative Prompt ist ebenso wichtig wie der positive.';
+    }
+
+    else {
+      // DALL-E / general: natural language works best
+      const parts = [];
+      if (fd.subject)      parts.push(fd.subject+'.');
+      if (fd.style)        parts.push(`Stil: ${fd.style}.`);
+      if (fd.artRef)       parts.push(`Referenz: ${fd.artRef}.`);
+      if (fd.composition)  parts.push(`Komposition: ${fd.composition}.`);
+      if (fd.lighting)     parts.push(`Beleuchtung: ${fd.lighting}.`);
+      if (fd.mood)         parts.push(`Stimmung: ${fd.mood}.`);
+      if (fd.colorPalette) parts.push(`Farbpalette: ${fd.colorPalette}.`);
+      parts.push('Hochwertig, detailreich.');
+      const r = ratioVal(fd.ratio);
+      if (r) parts.push(`Seitenverhältnis ${r}.`);
+      if (fd.negative) parts.push(`Nicht enthalten: ${fd.negative}.`);
+
+      prompt = parts.join(' ');
+      tip = '💡 DALL-E: Natürliche Sprache funktioniert sehr gut. Du kannst "Generate a photorealistic image of..." als Prefix hinzufügen. DALL-E 3 versteht komplexe Beschreibungen gut.';
+    }
+  }
+
+  document.getElementById('promptOut').textContent = prompt || '(Pflichtfelder noch nicht ausgefüllt.)';
+  document.getElementById('charCount').textContent = prompt.length + ' Zeichen';
+  document.getElementById('tipOut').textContent = tip;
+}
+
+// ─── Keyword helpers for image prompts ───────────────────────
+function styleKW(s) {
+  const m = {'Fotorealistisch':'photorealistic','Digitale Illustration':'digital illustration','Ölgemälde':'oil painting','3D Render':'3D render, octane render','Anime / Manga':'anime style','Aquarell':'watercolor painting','Concept Art':'concept art','Minimalistisch':'minimalist','Vintage / Retro':'vintage, retro style'};
+  return m[s]||s.toLowerCase();
+}
+function compositionKW(s) {
+  const m = {'Nahaufnahme / Close-up':'close-up shot','Portrait':'portrait shot','Halbkörper':'half body shot','Weitwinkel / Totale':'wide angle shot','Vogelperspektive':'bird\'s eye view','Froschperspektive':'low angle shot, worm\'s eye view','Symmetrisch':'symmetrical composition'};
+  return m[s]||s.toLowerCase();
+}
+function lightingKW(s) {
+  const m = {'Natürliches Tageslicht':'natural daylight','Golden Hour':'golden hour lighting','Blaue Stunde / Blue Hour':'blue hour, dusk lighting','Studiobeleuchung':'studio lighting, softbox','Dramatisch / Chiaroscuro':'dramatic lighting, chiaroscuro','Neonlicht':'neon lights, cyberpunk lighting','Kerzenlicht / Fackelschein':'candlelight, warm ambient light','Gegenlicht / Backlit':'backlit, rim lighting, silhouette'};
+  return m[s]||s.toLowerCase();
+}
+function moodKW(s) {
+  const m = {'Ruhig & friedlich':'peaceful, serene atmosphere','Energiegeladen':'energetic, dynamic','Mystisch & geheimnisvoll':'mysterious, ethereal, foggy','Warm & einladend':'warm, cozy, inviting','Dunkel & dramatisch':'dark, dramatic, moody','Verspielt & fröhlich':'playful, cheerful, vibrant','Melancholisch':'melancholic, bittersweet','Episch & grandios':'epic, cinematic, majestic'};
+  return m[s]||s.toLowerCase();
+}
+function colorKW(s) {
+  const m = {'Warme Töne':'warm color palette, oranges and reds','Kühle Töne':'cool color palette, blues and greens','Pastellfarben':'pastel colors, soft tones','Schwarz & Weiß':'black and white, monochrome','Erdtöne':'earthy tones, browns and ochres','Neonfarben':'neon colors, vivid and bright','Monochrom':'monochromatic'};
+  return m[s]||s.toLowerCase();
+}
+function ratioVal(s) {
+  if (!s) return '';
+  const m = {'1:1 Quadrat':'1:1','16:9 Querformat':'16:9','9:16 Hochformat':'9:16','4:3':'4:3','3:2 Foto':'3:2'};
+  return m[s]||'';
+}
+function articleFor(fmt) {
+  const a = {'E-Mail':'eine','Zusammenfassung':'eine','Social Media Caption':'eine','Blog-Artikel':'einen','LinkedIn Post':'einen','Newsletter':'einen'};
+  return a[fmt]||'einen';
+}
+
+// ─── Copy to clipboard ────────────────────────────────────────
+async function copyPrompt() {
+  const text = document.getElementById('promptOut').textContent;
+  const btn = document.getElementById('copyBtn');
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const el = document.getElementById('promptOut');
+    const r = document.createRange();
+    r.selectNode(el);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(r);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+  }
+  btn.textContent = '✓ Kopiert!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.innerHTML = '📋 Prompt kopieren'; btn.classList.remove('copied'); }, 2200);
+}
+</script>
+</body>
+</html>
