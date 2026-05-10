@@ -15,13 +15,13 @@ body {
 }
 
 header {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
   color: white;
   padding: 18px 32px;
   display: flex;
   align-items: center;
   gap: 14px;
-  box-shadow: 0 2px 12px rgba(79,70,229,0.3);
+  box-shadow: 0 2px 12px rgba(30,58,138,0.3);
 }
 
 header .logo { font-size: 1.6rem; }
@@ -49,7 +49,7 @@ header p { font-size: 0.82rem; opacity: 0.75; margin-top: 2px; }
   font-weight: 500;
 }
 
-.step-item.active { color: #4f46e5; }
+.step-item.active { color: #1e3a8a; }
 .step-item.done { color: #059669; }
 
 .step-num {
@@ -61,7 +61,7 @@ header p { font-size: 0.82rem; opacity: 0.75; margin-top: 2px; }
   flex-shrink: 0;
 }
 
-.step-item.active .step-num { background: #4f46e5; color: white; }
+.step-item.active .step-num { background: #1e3a8a; color: white; }
 .step-item.done .step-num { background: #059669; color: white; }
 
 .step-line { flex: 1; height: 2px; background: #e5e7eb; max-width: 80px; margin: 0 8px; }
@@ -95,15 +95,15 @@ header p { font-size: 0.82rem; opacity: 0.75; margin-top: 2px; }
 }
 
 .area-card:hover {
-  border-color: #a5b4fc;
+  border-color: #93c5fd;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(79,70,229,0.1);
+  box-shadow: 0 6px 20px rgba(30,58,138,0.1);
 }
 
 .area-card.selected {
-  border-color: #4f46e5;
-  background: #eef2ff;
-  box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+  border-color: #1e3a8a;
+  background: #eff6ff;
+  box-shadow: 0 0 0 3px rgba(30,58,138,0.1);
 }
 
 .area-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
@@ -138,9 +138,9 @@ input[type="text"], textarea, select {
 }
 
 input[type="text"]:focus, textarea:focus, select:focus {
-  border-color: #4f46e5;
+  border-color: #1e3a8a;
   background: white;
-  box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
+  box-shadow: 0 0 0 3px rgba(30,58,138,0.08);
 }
 
 textarea { resize: vertical; min-height: 80px; }
@@ -172,8 +172,8 @@ select { cursor: pointer; appearance: none;
   line-height: 1;
 }
 
-.chip:hover { border-color: #818cf8; color: #4f46e5; }
-.chip.selected { background: #4f46e5; border-color: #4f46e5; color: white; font-weight: 600; }
+.chip:hover { border-color: #60a5fa; color: #1e3a8a; }
+.chip.selected { background: #1e3a8a; border-color: #1e3a8a; color: white; font-weight: 600; }
 
 /* Toggle */
 .toggle-row {
@@ -209,7 +209,7 @@ select { cursor: pointer; appearance: none;
   box-shadow: 0 1px 4px rgba(0,0,0,0.25);
 }
 
-.toggle-switch.on { background: #4f46e5; }
+.toggle-switch.on { background: #1e3a8a; }
 .toggle-switch.on::after { transform: translateX(20px); }
 
 /* Divider */
@@ -255,7 +255,7 @@ select { cursor: pointer; appearance: none;
 
 .btn-next {
   padding: 10px 22px;
-  background: #4f46e5;
+  background: #1e3a8a;
   color: white;
   border: none;
   border-radius: 8px;
@@ -267,7 +267,7 @@ select { cursor: pointer; appearance: none;
   margin-left: auto;
 }
 
-.btn-next:hover { background: #4338ca; transform: translateY(-1px); }
+.btn-next:hover { background: #172e6e; transform: translateY(-1px); }
 .btn-next:disabled { background: #d1d5db; color: #9ca3af; cursor: not-allowed; transform: none; }
 
 /* Prompt preview */
@@ -311,7 +311,7 @@ select { cursor: pointer; appearance: none;
 
 .btn-copy {
   padding: 10px 20px;
-  background: #4f46e5;
+  background: #1e3a8a;
   color: white;
   border: none;
   border-radius: 8px;
@@ -325,7 +325,7 @@ select { cursor: pointer; appearance: none;
   gap: 7px;
 }
 
-.btn-copy:hover { background: #4338ca; }
+.btn-copy:hover { background: #172e6e; }
 .btn-copy.copied { background: #059669; }
 
 .tip-box {
@@ -338,6 +338,41 @@ select { cursor: pointer; appearance: none;
   margin-top: 16px;
   line-height: 1.5;
 }
+
+.iteration-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.iteration-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.iteration-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.iter-chip {
+  padding: 7px 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: white;
+  color: #4b5563;
+  font-family: inherit;
+  transition: all 0.13s;
+  position: relative;
+}
+
+.iter-chip:hover { border-color: #60a5fa; color: #1e3a8a; background: #eff6ff; }
+.iter-chip.copied { border-color: #059669; color: #059669; background: #ecfdf5; }
 
 /* Info badge */
 .info-badge {
@@ -438,6 +473,12 @@ select { cursor: pointer; appearance: none;
     </div>
 
     <div class="tip-box" id="tipOut"></div>
+
+    <div class="iteration-section">
+      <div class="iteration-title">Ergebnis nicht zufriedenstellend? Schärfe mit einem Follow-up nach:</div>
+      <div class="iteration-chips" id="iterChips"></div>
+      <div class="toggle-hint" style="margin-top:10px">Tipp: 1–2 Follow-ups gleichzeitig für beste Ergebnisse.</div>
+    </div>
 
     <div class="nav-btns">
       <button class="btn-back" onclick="goTo(2)">← Anpassen</button>
@@ -590,6 +631,11 @@ function renderForm() {
         ${textInput('goal','z.B. Interesse wecken, Kontakt aufnehmen, etwas lernen, Vertrauen aufbauen...')}
       </div>
 
+      <div class="field-group">
+        <label>Qualitätsziel – Woran erkennst du einen guten Output? <span class="optional">optional</span></label>
+        ${chips('contentQuality', ['Vertrauen aufbauen','Engagement & Interaktion','Zum Handeln motivieren','Faktisch präzise','Einfach & verständlich','Hohe Aufmerksamkeit','Leads generieren'])}
+      </div>
+
       <hr class="section-divider">
       <div class="section-label">Qualität verfeinern (optional)</div>
 
@@ -629,6 +675,7 @@ function renderForm() {
       <div class="field-group">
         <label>Rolle der KI <span class="optional">optional – stark empfohlen</span></label>
         ${textInput('role','z.B. erfahrener SAP FI/CO-Berater, Projektmanager mit Lean-Hintergrund, Senior Marketing Strategist...')}
+        <div class="toggle-hint" style="margin-top:6px">Rollen helfen bei Ton & Perspektive – wichtiger sind gute Beispiele und klarer Kontext.</div>
       </div>
 
       <div class="field-group">
@@ -644,7 +691,7 @@ function renderForm() {
       <hr class="section-divider">
       <div class="section-label">Qualität & Verhalten</div>
 
-      ${toggle('cot','Schrittweise denken (Chain of Thought)','KI denkt zuerst durch, dann antwortet sie – besser bei komplexen Aufgaben')}
+      ${toggle('cot','Aufgabe systematisch strukturieren','KI arbeitet die Aufgabe strukturiert und logisch ab – empfohlen bei komplexen Aufgaben')}
       ${toggle('variants','Mehrere Varianten vorschlagen','KI soll 2–3 Alternativen anbieten')}
 
       <div class="field-group" style="margin-top:16px">
@@ -765,22 +812,20 @@ function renderPrompt() {
     const fmt = fd.format==='Sonstiges' ? (fd.formatCustom||'Text') : (fd.format||'Text');
     const lines = [];
 
-    if (fd.topic)    lines.push(`Schreibe ${articleFor(fmt)} ${fmt} über folgendes Thema:\n"${fd.topic}"`);
-    else             lines.push(`Schreibe ${articleFor(fmt)} ${fmt}.`);
+    if (fd.topic) lines.push(`Schreibe ${articleFor(fmt)} ${fmt} über folgendes Thema:\n„${fd.topic}"`);
+    else          lines.push(`Schreibe ${articleFor(fmt)} ${fmt}.`);
 
-    const meta = [];
-    if (fd.audience)    meta.push(`Zielgruppe: ${fd.audience}`);
-    if (fd.tone)        meta.push(`Ton: ${fd.tone}`);
-    if (fd.perspective) meta.push(`Perspektive: ${fd.perspective}`);
-    if (fd.length)      meta.push(`Länge: ${fd.length}`);
-    if (meta.length)    lines.push('\n'+meta.join('\n'));
-
-    if (fd.goal)     lines.push(`\nZiel: ${fd.goal}`);
-    if (fd.platform) lines.push(`Plattform-Hinweise: ${fd.platform}`);
-    if (fd.avoid)     lines.push(`\nBitte vermeide: ${fd.avoid}`);
-    if (fd.example)   lines.push(`\nOrientiere dich an folgendem Stil:\n${fd.example}`);
-    if (fd.onUnclear) lines.push(`\nBei Unklarheiten: ${fd.onUnclear}.`);
-    if (fd.variants)  lines.push(`\nBitte erstelle 2–3 verschiedene Varianten.`);
+    if (fd.audience)      lines.push(`\nDie Inhalte sollen auf ${fd.audience} zugeschnitten sein.`);
+    if (fd.tone)          lines.push(toneText(fd.tone));
+    if (fd.perspective)   lines.push(perspectiveText(fd.perspective));
+    if (fd.length)        lines.push(lengthText(fd.length));
+    if (fd.goal)          lines.push(`\nZiel ist es, ${fd.goal}.`);
+    if (fd.contentQuality) lines.push(contentQualityNatural(fd.contentQuality));
+    if (fd.platform)      lines.push(`Berücksichtige: ${fd.platform}`);
+    if (fd.avoid)         lines.push(`\nVermeide ${fd.avoid}.`);
+    if (fd.example)       lines.push(`\nOrientiere dich stilistisch an folgendem Beispiel:\n${fd.example}`);
+    if (fd.onUnclear)     lines.push(`\n${onUnclearText(fd.onUnclear)}`);
+    if (fd.variants)      lines.push(`\nErstelle zusätzlich 2–3 unterschiedliche Varianten.`);
 
     prompt = lines.join('\n').trim();
     tip = '💡 Tipp: Dieser Prompt funktioniert in Claude, ChatGPT und Gemini. Du kannst am Ende noch spezifische Inhalte oder Materialien anhängen.';
@@ -789,21 +834,16 @@ function renderPrompt() {
   else if (area==='task') {
     const lines = [];
 
-    if (fd.role)     lines.push(`Du bist ${fd.role}.\n`);
-    if (fd.task)     lines.push(`Aufgabe:\n${fd.task}`);
-    if (fd.context)  lines.push(`\nKontext:\n${fd.context}`);
-
-    if (fd.cot)      lines.push(`\nBitte denke die Aufgabe zuerst Schritt für Schritt durch, bevor du antwortest.`);
-
-    const out = [];
-    if (fd.outputFormat) out.push(`Format des Outputs: ${fd.outputFormat}`);
-    if (fd.quality)      out.push(`Kriterien: ${fd.quality}`);
-    if (out.length)      lines.push('\n'+out.join('\n'));
-
-    if (fd.constraints)  lines.push(`\nWichtig – bitte vermeide: ${fd.constraints}`);
-    if (fd.variants)     lines.push(`Bitte zeige 2–3 verschiedene Ansätze.`);
-    if (fd.onUnclear)    lines.push(`\nBei Unklarheiten: ${fd.onUnclear}.`);
-    if (fd.taskExample)  lines.push(`\nBeispiel für einen guten Output:\n${fd.taskExample}`);
+    if (fd.role)        lines.push(`Handle aus der Perspektive eines ${fd.role}.\n`);
+    if (fd.task)        lines.push(`Bearbeite folgende Aufgabe:\n${fd.task}`);
+    if (fd.context)     lines.push(`\nBerücksichtige dabei folgenden Kontext:\n${fd.context}`);
+    if (fd.cot)         lines.push(`\nArbeite die Aufgabe strukturiert und logisch Schritt für Schritt ab.`);
+    if (fd.outputFormat) lines.push(`\n${outputFormatText(fd.outputFormat)}`);
+    if (fd.quality)     lines.push(`Achte besonders auf: ${fd.quality}`);
+    if (fd.constraints) lines.push(`\nVermeide ${fd.constraints}.`);
+    if (fd.variants)    lines.push(`Zeige 2–3 unterschiedliche Lösungsansätze.`);
+    if (fd.onUnclear)   lines.push(`\n${onUnclearText(fd.onUnclear)}`);
+    if (fd.taskExample) lines.push(`\nOrientiere dich am folgenden Beispiel-Output:\n${fd.taskExample}`);
 
     prompt = lines.join('\n').trim();
     tip = '💡 Tipp: Füge nach diesem Prompt das konkrete Material an (Text, Daten, Tabelle etc.) das die KI verarbeiten soll.';
@@ -866,19 +906,21 @@ function renderPrompt() {
     }
 
     else {
-      // DALL-E / general: natural language works best
+      // DALL-E / general: natural language
       const parts = [];
-      if (fd.subject)      parts.push(fd.subject+'.');
-      if (fd.style)        parts.push(`Stil: ${fd.style}.`);
-      if (fd.artRef)       parts.push(`Referenz: ${fd.artRef}.`);
-      if (fd.composition)  parts.push(`Komposition: ${fd.composition}.`);
+      if (fd.subject) parts.push(fd.subject);
+      const desc = [];
+      if (fd.style)        desc.push(`im Stil: ${fd.style}`);
+      if (fd.artRef)       desc.push(fd.artRef);
+      if (fd.composition)  desc.push(fd.composition);
+      if (desc.length)     parts.push(desc.join(', ')+'.');
       if (fd.lighting)     parts.push(`Beleuchtung: ${fd.lighting}.`);
       if (fd.mood)         parts.push(`Stimmung: ${fd.mood}.`);
-      if (fd.colorPalette) parts.push(`Farbpalette: ${fd.colorPalette}.`);
-      parts.push('Hochwertig, detailreich.');
+      if (fd.colorPalette) parts.push(`Farbgebung: ${fd.colorPalette}.`);
+      parts.push('Hochwertig und detailreich.');
       const r = ratioVal(fd.ratio);
       if (r) parts.push(`Seitenverhältnis ${r}.`);
-      if (fd.negative) parts.push(`Nicht enthalten: ${fd.negative}.`);
+      if (fd.negative) parts.push(`Nicht im Bild enthalten: ${fd.negative}.`);
 
       prompt = parts.join(' ');
       tip = '💡 DALL-E: Natürliche Sprache funktioniert sehr gut. Du kannst "Generate a photorealistic image of..." als Prefix hinzufügen. DALL-E 3 versteht komplexe Beschreibungen gut.';
@@ -888,6 +930,56 @@ function renderPrompt() {
   document.getElementById('promptOut').textContent = prompt || '(Pflichtfelder noch nicht ausgefüllt.)';
   document.getElementById('charCount').textContent = prompt.length + ' Zeichen';
   document.getElementById('tipOut').textContent = tip;
+  renderIterationChips();
+}
+
+function getIterationPrompts() {
+  const common = [
+    'Vermeide Floskeln und generische KI-Sprache.',
+    'Kürzer und prägnanter – halbiere die Länge.',
+    'Weniger allgemein, mehr konkret und spezifisch.',
+    'Einfachere Sprache – so als würdest du es einem Freund erklären.',
+  ];
+  const byArea = {
+    content: [
+      'Stärkerer Einstieg – der erste Satz muss sofort Aufmerksamkeit erzeugen.',
+      'Stärker am Beispiel orientieren das ich gegeben habe.',
+      'Passe den Ton an – direkter und persönlicher.',
+      'Füge einen konkreten Call-to-Action am Ende hinzu.',
+    ],
+    task: [
+      'Das Ergebnis ist zu allgemein – geh tiefer auf meine konkrete Situation ein.',
+      'Zeige eine alternative Herangehensweise.',
+      'Erkläre deine Annahmen und Schlussfolgerungen.',
+      'Fasse die wichtigsten Punkte in maximal 3 Sätzen zusammen.',
+    ],
+    image: [
+      'Das Motiv soll mehr im Vordergrund stehen.',
+      'Verstärke die Atmosphäre – dramatischer und stimmungsvoller.',
+      'Erzeuge eine Variation mit dem gleichen Motiv aber anderem Stil.',
+      'Mehr Details und Textur im gesamten Bild.',
+    ],
+  };
+  return [...(byArea[area] || []), ...common];
+}
+
+function renderIterationChips() {
+  const container = document.getElementById('iterChips');
+  container.innerHTML = getIterationPrompts().map(p =>
+    `<button class="iter-chip" onclick="copyIterPrompt(this, \`${p.replace(/`/g,"'")}\`)">${p}</button>`
+  ).join('');
+}
+
+async function copyIterPrompt(btn, text) {
+  try { await navigator.clipboard.writeText(text); } catch {
+    const el = document.createElement('textarea');
+    el.value = text; document.body.appendChild(el);
+    el.select(); document.execCommand('copy'); document.body.removeChild(el);
+  }
+  btn.classList.add('copied');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Kopiert';
+  setTimeout(() => { btn.classList.remove('copied'); btn.textContent = orig; }, 2000);
 }
 
 // ─── Keyword helpers for image prompts ───────────────────────
@@ -916,6 +1008,74 @@ function ratioVal(s) {
   const m = {'1:1 Quadrat':'1:1','16:9 Querformat':'16:9','9:16 Hochformat':'9:16','4:3':'4:3','3:2 Foto':'3:2'};
   return m[s]||'';
 }
+function toneText(t) {
+  const m = {
+    'Professionell':'Verwende einen professionellen und klaren Ton.',
+    'Locker & persönlich':'Verwende einen lockeren und persönlichen Ton.',
+    'Direkt':'Schreibe direkt und ohne Umschweife.',
+    'Inspirierend':'Der Text soll inspirierend und motivierend wirken.',
+    'Sachlich-nüchtern':'Formuliere sachlich und nüchtern.',
+    'Humorvoll':'Verwende einen leichten, humorvollen Ton.',
+  };
+  return m[t] || `Ton: ${t}`;
+}
+
+function perspectiveText(p) {
+  const m = {
+    'Ich-Perspektive':'Schreibe aus der Ich-Perspektive.',
+    'Wir-Perspektive':'Schreibe aus der Wir-Perspektive.',
+    '3. Person':'Verwende die dritte Person.',
+    'Du-Ansprache (direkt)':'Verwende direkte Du-Ansprache.',
+  };
+  return m[p] || `Perspektive: ${p}`;
+}
+
+function lengthText(l) {
+  const m = {
+    'Sehr kurz (~80W)':'Halte den Text sehr kurz – maximal ca. 80 Wörter.',
+    'Kurz (~150W)':'Halte den Text kurz und prägnant – ca. 150 Wörter.',
+    'Mittel (~300W)':'Halte die Länge ausgewogen – ca. 300 Wörter.',
+    'Lang (~600W)':'Gehe ausführlich auf das Thema ein – ca. 600 Wörter.',
+    'Sehr lang (~1000W+)':'Gehe sehr detailliert auf das Thema ein – über 1000 Wörter.',
+  };
+  return m[l] || `Länge: ${l}`;
+}
+
+function contentQualityNatural(q) {
+  const m = {
+    'Vertrauen aufbauen':'Der Output soll Vertrauen aufbauen und glaubwürdig wirken.',
+    'Engagement & Interaktion':'Ziel ist es, Engagement und Interaktion anzuregen.',
+    'Zum Handeln motivieren':'Der Text soll den Leser klar zum Handeln motivieren.',
+    'Faktisch präzise':'Priorisiere faktische Genauigkeit und klare Aussagen.',
+    'Einfach & verständlich':'Erkläre Inhalte möglichst einfach und verständlich.',
+    'Hohe Aufmerksamkeit':'Der Text soll sofort Aufmerksamkeit erzeugen und im Gedächtnis bleiben.',
+    'Leads generieren':'Der Text soll Interesse wecken und potenzielle Leads erzeugen.',
+  };
+  return m[q] || q;
+}
+
+function onUnclearText(v) {
+  const m = {
+    'Nachfragen bevor sie anfängt':'Falls Informationen fehlen oder unklar sind, stelle gezielte Rückfragen.',
+    'Eigene Annahmen treffen und transparent nennen':'Falls Informationen fehlen, nenne deine Annahmen transparent.',
+    'Beide Möglichkeiten zeigen':'Falls mehrere sinnvolle Interpretationen möglich sind, zeige die wichtigsten Varianten.',
+  };
+  return m[v] || v;
+}
+
+function outputFormatText(f) {
+  const m = {
+    'Fließtext':'Formuliere die Antwort als zusammenhängenden Fließtext.',
+    'Aufzählung':'Gib die Antwort als Aufzählung aus.',
+    'Nummerierte Liste':'Gib die Antwort als nummerierte Liste aus.',
+    'Tabelle':'Strukturiere die Antwort als Tabelle.',
+    'Schritt-für-Schritt':'Erstelle eine Schritt-für-Schritt-Anleitung.',
+    'Pro/Contra':'Strukturiere die Antwort als Pro/Contra-Gegenüberstellung.',
+    'Zusammenfassung + Details':'Beginne mit einer kurzen Zusammenfassung, gefolgt von den Details.',
+  };
+  return m[f] || `Format: ${f}`;
+}
+
 function articleFor(fmt) {
   const a = {'E-Mail':'eine','Zusammenfassung':'eine','Social Media Caption':'eine','Blog-Artikel':'einen','LinkedIn Post':'einen','Newsletter':'einen'};
   return a[fmt]||'einen';
